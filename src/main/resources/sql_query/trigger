@@ -1,0 +1,12 @@
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS after_insert_tbl_request_rfc;
+DELIMITER $$
+
+CREATE TRIGGER after_insert_tbl_request_rfc
+AFTER INSERT
+ON tbl_request_rfc FOR EACH ROW
+BEGIN
+	INSERT INTO tbl_rfc_logs(request_id,STATUS,created_by,created_date)
+	VALUES(new.request_id, new.STATUS, new.created_by, CURRENT_TIMESTAMP);
+END$$

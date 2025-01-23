@@ -1,0 +1,23 @@
+-- SELECT prosrc FROM pg_proc WHERE proname = 'sp_add_mst_contoh';
+--https://www.postgresql.org/docs/current/errcodes-appendix.html
+-- call add_mst_test(1,2.082119041603,'m srp',1.809,false,'2020-12-20') -- good entry
+-- call add_mst_test('a',2.082119041603,'m srp',1.809,false,'2020-12-20') -- error
+-- 				EXECUTE format('INSERT INTO log_error (state,msg,trx,name,created_by,created_at) VALUES ($1,$2,$3,$4,$5,CURRENT_TIMESTAMP)') USING
+DROP PROCEDURE IF EXISTS add_mst_test ;
+CREATE OR REPLACE PROCEDURE add_mst_test(
+   t_int int4,
+   t_double float8,
+   t_string text,
+   t_float float4,
+   t_boolean bool,
+   t_date date
+)
+as $$
+BEGIN
+        INSERT INTO mst_contoh (test_int,test_double,test_string,test_float,test_boolean,test_date) VALUES (t_int,t_double,t_string,t_float,t_boolean,t_date);
+
+				exception when others then
+    RAISE INFO 'Error Name:%',SQLERRM;
+    RAISE INFO 'Error State:%', SQLSTATE;
+				INSERT INTO log_error(statex,msg,trx,namex,created_by,created_at) VALUES(SQLSTATE,SQLERRM,'sp','add_mst_contoh',1,CURRENT_TIMESTAMP);END;
+$$ LANGUAGE plpgsql;

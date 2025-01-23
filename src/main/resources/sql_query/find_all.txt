@@ -1,0 +1,14 @@
+DROP FUNCTION
+IF
+	EXISTS find_all;
+CREATE
+	OR REPLACE FUNCTION find_all ( test_page INT, test_size INT, test_sort VARCHAR, test_sort_by VARCHAR ) RETURNS SETOF mst_contoh AS $$ BEGIN
+		RETURN QUERY
+	SELECT
+		*
+	FROM
+		mst_test
+	ORDER BY
+	id ASC
+	LIMIT test_size OFFSET ( test_page * test_size );
+	END; $$ LANGUAGE 'plpgsql';
